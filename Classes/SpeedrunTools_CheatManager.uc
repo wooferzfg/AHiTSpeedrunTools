@@ -23,6 +23,28 @@ function RemoveMultipleFlags(Array<string> ids, Array<string> maps) {
 	}
 }
 
+function ResetContract(class<Hat_SnatcherContract_Act> contractClass) {
+	local Hat_SaveGame save;
+	save = `SaveManager.GetCurrentSaveData();
+	save.SnatcherContracts.AddItem(contractClass);
+	save.TurnedInSnatcherContracts.RemoveItem(contractClass);
+}
+
+function ClearAllContracts() {
+	local Hat_SaveGame save;
+	save = `SaveManager.GetCurrentSaveData();
+	save.SnatcherContracts.Length = 0;
+	save.TurnedInSnatcherContracts.Length = 0;
+	save.CompletedSnatcherContracts.Length = 0;
+}
+
+function TurnInTwoContracts() {
+	local Hat_SaveGame save;
+	save = `SaveManager.GetCurrentSaveData();
+	save.TurnedInSnatcherContracts.AddItem(class'Hat_SnatcherContract_IceWall');
+	save.TurnedInSnatcherContracts.AddItem(class'Hat_SnatcherContract_MailDelivery');
+}
+
 function Array<string> GetMapsForChapterAndAct(string chapterName, int actNumber) {
 	local Array<string> maps;
 	maps.Length = 0;
@@ -104,23 +126,31 @@ function ResetLevelFlags() {
 		ids.AddItem("hat_subconpainting_green");
 		ids.AddItem("hat_bonfire_green");
 		ids.AddItem("hat_snatchercontractsummon");
-		ids.AddItem("first_post_finale_chat");
+		ids.AddItem("hat_snatchercontract_icewall");
+		ids.AddItem("hat_snatchercontract_toilet");
+		ids.AddItem("hat_snatchercontract_vanessa");
+		ids.AddItem("hat_snatchercontract_maildelivery");
+
+		ClearAllContracts();
+		TurnInTwoContracts();
+
 		if (actNumber == 1) {
-			ids.AddItem("hat_snatchercontract_icewall");
+			ResetContract(class'Hat_SnatcherContract_IceWall');
 		}
 		else if (actNumber == 2) {
+			ResetContract(class'Hat_SnatcherContract_IceWall');
 			ids.AddItem("hat_subconpainting_blue");
 			ids.AddItem("hat_bonfire_blue");
 			ids.AddItem("hat_snatchercontract_icewall");
 		}
 		else if (actNumber == 3) {
-			ids.AddItem("hat_snatchercontract_toilet");
+			ResetContract(class'Hat_SnatcherContract_Toilet');
 		}
 		else if (actNumber == 4) {
-			ids.AddItem("hat_snatchercontract_vanessa");
+			ResetContract(class'Hat_SnatcherContract_Vanessa');
 		}
 		else if (actNumber == 5) {
-			ids.AddItem("hat_snatchercontract_maildelivery");
+			ResetContract(class'Hat_SnatcherContract_MailDelivery');
 		}
 	}
 	else if (chapterName == "Chapter4_Sand") {
@@ -143,6 +173,8 @@ function ResetContractualObligations() {
 	if (chapterName == "Chapter2_Subcon" && actNumber == 1) {
 		maps = GetMapsForChapterAndAct(chapterName, actNumber);
 		
+		ClearAllContracts();
+
 		ids.AddItem("contract_unlock_actid");
 		ids.AddItem("hat_bonfire_yellow");
 		ids.AddItem("hat_subconpainting_yellow");
