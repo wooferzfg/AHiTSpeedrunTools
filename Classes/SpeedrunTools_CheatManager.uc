@@ -141,7 +141,6 @@ function ResetLevelFlags() {
 			ResetContract(class'Hat_SnatcherContract_IceWall');
 			ids.AddItem("hat_subconpainting_blue");
 			ids.AddItem("hat_bonfire_blue");
-			ids.AddItem("hat_snatchercontract_icewall");
 		}
 		else if (actNumber == 3) {
 			ResetContract(class'Hat_SnatcherContract_Toilet');
