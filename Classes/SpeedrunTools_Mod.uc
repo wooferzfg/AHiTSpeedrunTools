@@ -3,7 +3,7 @@ class SpeedrunTools_Mod extends GameMod
 	
 var config int reset_level_collectibles;
 var config int reset_level_flags;
-var config int reset_snatcher_bag;
+var config int reset_contractual_obligations;
 var config int reset_alpine_intro;
 
 event OnModLoaded() {

@@ -131,7 +131,7 @@ function ResetLevelFlags() {
 	RemoveMultipleFlags(ids, maps);
 }
 
-function ResetSnatcherBag() {
+function ResetContractualObligations() {
 	local string chapterName;
 	local int actNumber;
 	local Array<string> ids;
@@ -182,8 +182,8 @@ exec function RestartIL() {
 		ResetCollectibles();
 	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_level_flags') == 0)
 		ResetLevelFlags();
-	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_snatcher_bag') == 0)
-		ResetSnatcherBag();
+	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_contractual_obligations') == 0)
+		ResetContractualObligations();
 	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_alpine_intro') == 0)
 		ResetAlpineIntro();
 
