@@ -23,6 +23,18 @@ function RemoveMultipleFlags(Array<string> ids, Array<string> maps) {
 	}
 }
 
+function SetTimePieceCompletion(bool completion, string id) {
+	local Hat_SaveGame save;
+	local int i;
+	save = `SaveManager.GetCurrentSaveData();
+    for (i = 0; i < save.TimeObjects.Length; i++)
+    {
+		if (InStr(save.TimeObjects[i].ID, id) >= 0) {
+			save.TimeObjects[i].Collected = completion;
+		}
+    }
+}
+
 function ResetContract(class<Hat_SnatcherContract_Act> contractClass) {
 	local Hat_SaveGame save;
 	save = `SaveManager.GetCurrentSaveData();
@@ -48,7 +60,7 @@ function TurnInTwoContracts() {
 function Array<string> GetMapsForChapterAndAct(string chapterName, int actNumber) {
 	local Array<string> maps;
 	maps.Length = 0;
-	
+
 	if (chapterName == "Chapter1_MafiaTown") {
 		maps.AddItem("mafia_town");
 		if (actNumber == 4)
@@ -82,7 +94,7 @@ function Array<string> GetMapsForChapterAndAct(string chapterName, int actNumber
 	else if (chapterName == "Chapter5_Finale") {
 		maps.AddItem("castle_mu");
 	}
-	
+
 	return maps;
 }
 
@@ -91,11 +103,11 @@ function ResetCollectibles() {
 	local int actNumber;
 	local Array<string> ids;
 	local Array<string> maps;
-	
+
 	chapterName = Hat_GameManager(WorldInfo.Game).GetChapterInfo().ChapterName;
 	actNumber = Hat_GameManager(WorldInfo.Game).GetCurrentAct();
 	maps = GetMapsForChapterAndAct(chapterName, actNumber);
-	
+
 	ids.AddItem("hat_collectible_badgepart");
 	ids.AddItem("hat_collectible_decoration_mostsuitable");
 	ids.AddItem("hat_collectible_roulettetoken");
@@ -103,7 +115,7 @@ function ResetCollectibles() {
 	ids.AddItem("hat_impactinteract_breakable_chemical_crate");
 	ids.AddItem("hat_goodie_vault");
 	ids.AddItem("hat_eyeblockade");
-		
+
 	RemoveMultipleFlags(ids, maps);
 }
 
@@ -112,12 +124,12 @@ function ResetLevelFlags() {
 	local int actNumber;
 	local Array<string> ids;
 	local Array<string> maps;
-	
+
 	chapterName = Hat_GameManager(WorldInfo.Game).GetChapterInfo().ChapterName;
 	actNumber = Hat_GameManager(WorldInfo.Game).GetCurrentAct();
 	maps = GetMapsForChapterAndAct(chapterName, actNumber);
 	ids.Length = 0;
-	
+
 	if (chapterName == "Chapter1_MafiaTown") {
 		if (actNumber == 4)
 			ids.AddItem("mafia_hq_intro_cinematic");
@@ -154,9 +166,9 @@ function ResetLevelFlags() {
 	}
 	else if (chapterName == "Chapter4_Sand") {
 		if (actNumber == 1)
-			ids.AddItem("hat_sandstationhorn");
+			ids.AddItem("hat_sandstationhorn_0");
 	}
-		
+
 	RemoveMultipleFlags(ids, maps);
 }
 
@@ -165,19 +177,19 @@ function ResetContractualObligations() {
 	local int actNumber;
 	local Array<string> ids;
 	local Array<string> maps;
-	
+
 	chapterName = Hat_GameManager(WorldInfo.Game).GetChapterInfo().ChapterName;
 	actNumber = Hat_GameManager(WorldInfo.Game).GetCurrentAct();
-	
+
 	if (chapterName == "Chapter2_Subcon" && actNumber == 1) {
 		maps = GetMapsForChapterAndAct(chapterName, actNumber);
-		
+
 		ClearAllContracts();
 
 		ids.AddItem("contract_unlock_actid");
 		ids.AddItem("hat_bonfire_yellow");
 		ids.AddItem("hat_subconpainting_yellow");
-			
+
 		RemoveMultipleFlags(ids, maps);
 	}
 }
@@ -187,37 +199,32 @@ function ResetAlpineIntro() {
 	local int actNumber;
 	local Array<string> ids;
 	local Array<string> maps;
-	
+
 	chapterName = Hat_GameManager(WorldInfo.Game).GetChapterInfo().ChapterName;
 	actNumber = Hat_GameManager(WorldInfo.Game).GetCurrentAct();
-	
+
 	if (chapterName == "Chapter4_Sand" && actNumber == 1) {
 		maps = GetMapsForChapterAndAct(chapterName, actNumber);
-		
+
 		ids.AddItem("actless_freeroam_intro_complete");
-			
+		ids.AddItem("hat_sandstationhorn_1");
+
+		SetTimePieceCompletion(false, "Alpine_Twilight");
+		SetTimePieceCompletion(false, "AlpineSkyline_WeddingCake");
+		SetTimePieceCompletion(false, "AlpineSkyline_Windmill");
+		SetTimePieceCompletion(false, "Alps_Birdhouse");
+		SetTimePieceCompletion(false, "AlpineSkyline_Finale");
+
 		RemoveMultipleFlags(ids, maps);
 	}
 }
 
-function SetRiftCompletion(bool completion) {
-	local Hat_SaveGame save;
-	local int i;
-	save = `SaveManager.GetCurrentSaveData();
-    for (i = 0; i < save.TimeObjects.Length; i++)
-    {
-		if (InStr(save.TimeObjects[i].ID, "TimeRift") >= 0) {
-			save.TimeObjects[i].Collected = completion;
-		}
-    }
-}
-
 function exec MarkRiftsIncomplete() {
-	SetRiftCompletion(false);
+	SetTimePieceCompletion(false, "TimeRift");
 }
 
 function exec MarkRiftsComplete() {
-	SetRiftCompletion(true);
+	SetTimePieceCompletion(true, "TimeRift");
 }
 
 exec function RestartIL() {
@@ -243,8 +250,10 @@ exec function RestartIL() {
 		ResetLevelFlags();
 	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_contractual_obligations') == 0)
 		ResetContractualObligations();
-	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_alpine_intro') == 0)
+	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_alpine_intro') == 0) {
 		ResetAlpineIntro();
+		act = 99;
+	}
 
 	// Override the act names, as they default to the first act name when it's a rift
 	// also fix acts that load other maps mid-act
@@ -264,10 +273,6 @@ exec function RestartIL() {
 		case "timerift_water_alp_goats": actOverride = "Twilight Bell"; break;
 		case "timerift_water_alp_cats": actOverride = "Curly Tail Trail"; break;
 		case "timerift_cave_alps": actOverride = "Alpine Skyline"; break;
-		case "alps_dungeon_birdhouse": actOverride = "The Birdhouse"; break;
-		case "alps_dungeon_twilight": actOverride = "The Twilight Bell"; break;
-		case "alps_dungeon_windmill": actOverride = "The Windmill"; break;
-		case "island_weddingcake": actOverride = "The Lava Cake"; break;
 		// main acts that change map mid-act (and yes I could do this more efficient but it looks nicer like this)
 		case "mafia_hq": level = "mafia_town_night"; break;
 		case "djgrooves_boss": level = "deadbirdstudio"; break;
@@ -291,7 +296,20 @@ exec function RestartIL() {
 			textureOverride = Texture2D'HatinTime_Titlecards_Misc.Textures.TimeRift_Water';
 		}
 	}
-		
+
+	if (chapter.ChapterName == "Chapter4_Sand") {
+		if (act == 3)
+			actOverride = "Mountain Peak: The Lava Cake";
+		else if (act == 6)
+			actOverride = "Mountain Peak: The Birdhouse";
+		else if (act == 13)
+			actOverride = "Mountain Peak: The Windmill";
+		else if (act == 15)
+			actOverride = "Mountain Peak: The Twilight Bell";
+		else if (act == 1 || act == 99)
+			actOverride = "Free Roam";
+	}
+
 	class'Hat_SeqAct_ChangeScene_Act'.static.DoTransitionStatic(level, chapter, act, textureOverride, chapterOverride, actOverride, chapterIdOverride);
 	class'Hat_GlobalTimer'.static.RestartActTimer();
 }
