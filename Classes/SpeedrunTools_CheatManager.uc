@@ -23,6 +23,13 @@ function RemoveMultipleFlags(Array<string> ids, Array<string> maps) {
 	}
 }
 
+function SetFlag(String id, Array<string> maps, int value) {
+	local int i;
+	for (i = 0; i < maps.Length; i++) {
+		class'Hat_SaveBitHelper'.static.SetLevelBits(id, value, maps[i]);
+	}
+}
+
 function SetTimePieceCompletion(bool completion, string id) {
 	local Hat_SaveGame save;
 	local int i;
@@ -153,6 +160,8 @@ function ResetLevelFlags() {
 			ResetContract(class'Hat_SnatcherContract_IceWall');
 			ids.AddItem("hat_subconpainting_blue");
 			ids.AddItem("hat_bonfire_blue");
+			ids.RemoveItem("hat_snatchercontract_icewall");
+			SetFlag("hat_snatchercontract_icewall", maps, 3);
 		}
 		else if (actNumber == 3) {
 			ResetContract(class'Hat_SnatcherContract_Toilet');
@@ -248,9 +257,9 @@ exec function RestartIL() {
 		ResetCollectibles();
 	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_level_flags') == 0)
 		ResetLevelFlags();
-	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_contractual_obligations') == 0)
+	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_contractual_obligations') == 0 && chapter.ChapterName == "Chapter2_Subcon")
 		ResetContractualObligations();
-	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_alpine_intro') == 0) {
+	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_alpine_intro') == 0 && chapter.ChapterName == "Chapter4_Sand") {
 		ResetAlpineIntro();
 		act = 99;
 	}
