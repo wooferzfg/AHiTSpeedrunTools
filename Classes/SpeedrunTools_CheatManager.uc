@@ -299,13 +299,13 @@ exec function RestartIL() {
 
 	if (chapter.ChapterName == "Chapter4_Sand") {
 		if (act == 3)
-			actOverride = "Mountain Peak: The Lava Cake";
+			actOverride = "The Lava Cake";
 		else if (act == 6)
-			actOverride = "Mountain Peak: The Birdhouse";
+			actOverride = "The Birdhouse";
 		else if (act == 13)
-			actOverride = "Mountain Peak: The Windmill";
+			actOverride = "The Windmill";
 		else if (act == 15)
-			actOverride = "Mountain Peak: The Twilight Bell";
+			actOverride = "The Twilight Bell";
 		else if (act == 1 || act == 99)
 			actOverride = "Free Roam";
 	}
