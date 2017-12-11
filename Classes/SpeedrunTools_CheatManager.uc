@@ -1,5 +1,8 @@
 class SpeedrunTools_CheatManager extends Hat_CheatManager;
 
+var Vector savedLocation;
+var Rotator savedRotation;
+
 function RemoveFlag(String id, String mapName) {
 	local int k;
 	local int i;
@@ -225,6 +228,25 @@ function ResetAlpineIntro() {
 		SetTimePieceCompletion(false, "AlpineSkyline_Finale");
 
 		RemoveMultipleFlags(ids, maps);
+	}
+}
+
+exec function SavePos() {
+	local Pawn playerPawn;
+	playerPawn = Hat_PlayerController(GetALocalPlayerController()).Pawn;
+
+	savedLocation = playerPawn.Location;
+	savedRotation = playerPawn.Rotation;
+}
+
+exec function LoadPos() {
+	local Pawn playerPawn;
+
+	if(savedLocation != vect(0,0,0)) {
+		playerPawn = Hat_PlayerController(GetALocalPlayerController()).Pawn;
+
+		playerPawn.SetLocation(savedLocation);
+		playerPawn.SetRotation(savedRotation);
 	}
 }
 
