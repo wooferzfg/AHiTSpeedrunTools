@@ -228,11 +228,11 @@ function ResetAlpineIntro() {
 	}
 }
 
-function exec MarkRiftsIncomplete() {
+exec function MarkRiftsIncomplete() {
 	SetTimePieceCompletion(false, "TimeRift");
 }
 
-function exec MarkRiftsComplete() {
+exec function MarkRiftsComplete() {
 	SetTimePieceCompletion(true, "TimeRift");
 }
 
