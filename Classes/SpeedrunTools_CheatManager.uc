@@ -200,6 +200,26 @@ function ResetAlpineIntro() {
 	}
 }
 
+function SetRiftCompletion(bool completion) {
+	local Hat_SaveGame save;
+	local int i;
+	save = `SaveManager.GetCurrentSaveData();
+    for (i = 0; i < save.TimeObjects.Length; i++)
+    {
+		if (InStr(save.TimeObjects[i].ID, "TimeRift") >= 0) {
+			save.TimeObjects[i].Collected = completion;
+		}
+    }
+}
+
+function exec MarkRiftsIncomplete() {
+	SetRiftCompletion(false);
+}
+
+function exec MarkRiftsComplete() {
+	SetRiftCompletion(true);
+}
+
 exec function RestartIL() {
 	local string level;
 	local Hat_ChapterInfo chapter;
@@ -209,6 +229,14 @@ exec function RestartIL() {
 	local Texture2D textureOverride;
 	local int chapterIdOverride;
 
+	level = Hat_GameManager(WorldInfo.Game).GetCurrentMapFilename();
+	chapter = Hat_GameManager(WorldInfo.Game).GetChapterInfo();
+	act = Hat_GameManager(WorldInfo.Game).GetCurrentAct();
+	chapterIdOverride = INDEX_NONE;
+
+	// we don't want it to work in hub or titlescreen or when the game is paused
+	if(level == "hub_spaceship" || level == "titlescreen_final" || Hat_PlayerController(GetALocalPlayerController()).IsPaused()) return;
+
 	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_level_collectibles') == 0)
 		ResetCollectibles();
 	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_level_flags') == 0)
@@ -217,14 +245,6 @@ exec function RestartIL() {
 		ResetContractualObligations();
 	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_alpine_intro') == 0)
 		ResetAlpineIntro();
-
-	level = Hat_GameManager(WorldInfo.Game).GetCurrentMapFilename();
-	chapter = Hat_GameManager(WorldInfo.Game).GetChapterInfo();
-	act = Hat_GameManager(WorldInfo.Game).GetCurrentAct();
-	chapterIdOverride = INDEX_NONE;
-
-	// we don't want it to work in hub or titlescreen or when the game is paused
-	if(level == "hub_spaceship" || level == "titlescreen_final" || Hat_PlayerController(GetALocalPlayerController()).IsPaused()) return;
 
 	// Override the act names, as they default to the first act name when it's a rift
 	// also fix acts that load other maps mid-act
