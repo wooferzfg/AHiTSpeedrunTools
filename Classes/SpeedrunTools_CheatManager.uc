@@ -3,7 +3,7 @@ class SpeedrunTools_CheatManager extends Hat_CheatManager;
 var Vector savedLocation;
 var Rotator savedRotation;
 
-function RemoveFlag(String id, String mapName) {
+static function RemoveFlag(String id, String mapName) {
 	local int k;
 	local int i;
 	local Array<GenericSaveBit> a;
@@ -16,7 +16,7 @@ function RemoveFlag(String id, String mapName) {
 	}
 }
 
-function RemoveMultipleFlags(Array<string> ids, Array<string> maps) {
+static function RemoveMultipleFlags(Array<string> ids, Array<string> maps) {
 	local int i;
 	local int j;
 	for (i = 0; i < maps.Length; i++) {
@@ -26,14 +26,14 @@ function RemoveMultipleFlags(Array<string> ids, Array<string> maps) {
 	}
 }
 
-function SetFlag(String id, Array<string> maps, int value) {
+static function SetFlag(String id, Array<string> maps, int value) {
 	local int i;
 	for (i = 0; i < maps.Length; i++) {
 		class'Hat_SaveBitHelper'.static.SetLevelBits(id, value, maps[i]);
 	}
 }
 
-function SetTimePieceCompletion(bool completion, string id) {
+static function SetTimePieceCompletion(bool completion, string id) {
 	local Hat_SaveGame save;
 	local int i;
 	save = `SaveManager.GetCurrentSaveData();
@@ -45,14 +45,14 @@ function SetTimePieceCompletion(bool completion, string id) {
     }
 }
 
-function ResetContract(class<Hat_SnatcherContract_Act> contractClass) {
+static function ResetContract(class<Hat_SnatcherContract_Act> contractClass) {
 	local Hat_SaveGame save;
 	save = `SaveManager.GetCurrentSaveData();
 	save.SnatcherContracts.AddItem(contractClass);
 	save.TurnedInSnatcherContracts.RemoveItem(contractClass);
 }
 
-function ClearAllContracts() {
+static function ClearAllContracts() {
 	local Hat_SaveGame save;
 	save = `SaveManager.GetCurrentSaveData();
 	save.SnatcherContracts.Length = 0;
@@ -60,14 +60,14 @@ function ClearAllContracts() {
 	save.CompletedSnatcherContracts.Length = 0;
 }
 
-function TurnInTwoContracts() {
+static function TurnInTwoContracts() {
 	local Hat_SaveGame save;
 	save = `SaveManager.GetCurrentSaveData();
 	save.TurnedInSnatcherContracts.AddItem(class'Hat_SnatcherContract_IceWall');
 	save.TurnedInSnatcherContracts.AddItem(class'Hat_SnatcherContract_MailDelivery');
 }
 
-function Array<string> GetMapsForChapterAndAct(string chapterName, int actNumber) {
+static function Array<string> GetMapsForChapterAndAct(string chapterName, int actNumber) {
 	local Array<string> maps;
 	maps.Length = 0;
 
@@ -248,14 +248,6 @@ exec function LoadPos() {
 		playerPawn.SetLocation(savedLocation);
 		playerPawn.SetRotation(savedRotation);
 	}
-}
-
-exec function MarkRiftsIncomplete() {
-	SetTimePieceCompletion(false, "TimeRift");
-}
-
-exec function MarkRiftsComplete() {
-	SetTimePieceCompletion(true, "TimeRift");
 }
 
 exec function RestartIL() {

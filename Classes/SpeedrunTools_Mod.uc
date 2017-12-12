@@ -3,10 +3,21 @@ class SpeedrunTools_Mod extends GameMod
 	
 var config int reset_level_collectibles;
 var config int reset_level_flags;
+var config int reset_time_rift_portals;
 var config int reset_contractual_obligations;
 var config int reset_alpine_intro;
 
+function ResetTimeRiftPortals() {
+	if (Hat_GameManager(WorldInfo.Game).GetCurrentMapFilename() == "hub_spaceship")
+		class'SpeedrunTools_CheatManager'.static.SetTimePieceCompletion(true, "TimeRift");
+	else
+		class'SpeedrunTools_CheatManager'.static.SetTimePieceCompletion(false, "TimeRift");
+}
+
 event OnModLoaded() {
+	if (reset_time_rift_portals == 0)
+		ResetTimeRiftPortals();
+
 	HookActorSpawn(class'Hat_Player', 'Hat_Player');
 	SetManager();
 }
