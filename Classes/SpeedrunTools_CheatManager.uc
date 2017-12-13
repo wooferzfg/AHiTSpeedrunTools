@@ -169,9 +169,6 @@ function ResetLevelFlags() {
 		else if (actNumber == 3) {
 			ResetContract(class'Hat_SnatcherContract_Toilet');
 		}
-		else if (actNumber == 4) {
-			ResetContract(class'Hat_SnatcherContract_Vanessa');
-		}
 		else if (actNumber == 5) {
 			ResetContract(class'Hat_SnatcherContract_MailDelivery');
 		}
