@@ -79,7 +79,10 @@ static function Array<string> GetMapsForChapterAndAct(string chapterName, int ac
 	else if (chapterName == "Chapter2_Subcon") {
 		maps.AddItem("subconforest");
 		if (actNumber == 2)
+		{
 			maps.AddItem("subcon_cave");
+			maps.AddItem("vanessa_manor");
+		}
 		else if (actNumber == 1 || actNumber == 4)
 			maps.AddItem("vanessa_manor");
 	}
