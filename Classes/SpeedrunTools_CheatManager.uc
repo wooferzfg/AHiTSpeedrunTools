@@ -45,7 +45,7 @@ static function SetTimePieceCompletion(bool completion, string id) {
     }
 }
 
-static function ResetContract(class<Hat_SnatcherContract_Act> contractClass) {
+static function ResetContract(class<Hat_SnatcherContract> contractClass) {
 	local Hat_SaveGame save;
 	save = `SaveManager.GetCurrentSaveData();
 	save.SnatcherContracts.AddItem(contractClass);
