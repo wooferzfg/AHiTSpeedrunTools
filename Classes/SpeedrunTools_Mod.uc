@@ -6,6 +6,7 @@ var config int reset_level_flags;
 var config int reset_time_rift_portals;
 var config int reset_contractual_obligations;
 var config int reset_alpine_intro;
+var config int block_in_spaceship;
 
 function ResetTimeRiftPortals() {
 	if (Hat_GameManager(WorldInfo.Game).GetCurrentMapFilename() == "hub_spaceship")

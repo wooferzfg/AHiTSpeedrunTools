@@ -79,11 +79,8 @@ static function Array<string> GetMapsForChapterAndAct(string chapterName, int ac
 	else if (chapterName == "Chapter2_Subcon") {
 		maps.AddItem("subconforest");
 		if (actNumber == 2)
-		{
 			maps.AddItem("subcon_cave");
-			maps.AddItem("vanessa_manor");
-		}
-		else if (actNumber == 1 || actNumber == 4)
+		else if (actNumber == 1 || actNumber == 2 || actNumber == 4)
 			maps.AddItem("vanessa_manor");
 	}
 	else if (chapterName == "Chapter3_Trainwreck") {
@@ -258,14 +255,17 @@ exec function RestartIL() {
 	local string actOverride;
 	local Texture2D textureOverride;
 	local int chapterIdOverride;
+	local bool blockInHub;
 
 	level = Hat_GameManager(WorldInfo.Game).GetCurrentMapFilename();
 	chapter = Hat_GameManager(WorldInfo.Game).GetChapterInfo();
 	act = Hat_GameManager(WorldInfo.Game).GetCurrentAct();
 	chapterIdOverride = INDEX_NONE;
+	blockInHub = class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'block_in_spaceship') == 0;
 
-	// we don't want it to work in hub or titlescreen or when the game is paused
-	if(level == "hub_spaceship" || level == "titlescreen_final" || Hat_PlayerController(GetALocalPlayerController()).IsPaused()) return;
+	// we don't want it to work in hub (if option set), or titlescreen, or when the game is paused
+	if(blockInHub ? level == "hub_spaceship" : false || level == "titlescreen_final" || Hat_PlayerController(GetALocalPlayerController()).IsPaused())
+		return;
 
 	if (class'GameMod'.static.GetConfigValue(class'SpeedrunTools_Mod', 'reset_level_collectibles') == 0)
 		ResetCollectibles();
